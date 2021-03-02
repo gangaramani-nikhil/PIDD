@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'options.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +28,7 @@ class _MyAppState extends State<MyApp> {
             bottomOpacity: 1.0,
             centerTitle: true,
           ),
-          body: Text("Work in Progress")),
+          body: Options()),
     );
   }
 }
