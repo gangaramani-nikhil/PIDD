@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1018126920431",
+    "project_id": "our-forest-280405",
+    "storage_bucket": "our-forest-280405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018126920431:android:db5afdb67814fa1e4f091a",
+        "android_client_info": {
+          "package_name": "com.PIDD"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018126920431-31n9lvsqoh0tpke3ocpr44c0tcdc55k8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkg2RoLTgEATxD8eLEcNBQf_1YcbSjJ4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018126920431-31n9lvsqoh0tpke3ocpr44c0tcdc55k8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1018126920431-q5qjau3ed7ci73uota60g1iu30ehvgf3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.PIDD"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

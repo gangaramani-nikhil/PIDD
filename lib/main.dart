@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import './History.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -13,6 +14,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
@@ -26,6 +28,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<bool> internetConnection;
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
   Future<bool> isConnected() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -65,16 +68,25 @@ class _MyAppState extends State<MyApp> {
             future: internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.data) {
-                return SingleChildScrollView(
-                  child: Column(children: [
-                    History(),
-                    History(),
-                    History(),
-                    History(),
-                    History(),
-                    History(),
-                  ]),
-                );
+                return FutureBuilder(
+                    future: _initialization,
+                    builder: (BuildContext context,
+                        AsyncSnapshot<FirebaseApp> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        return SingleChildScrollView(
+                          child: Column(children: [
+                            History(),
+                            History(),
+                            History(),
+                            History(),
+                            History(),
+                            History(),
+                          ]),
+                        );
+                      } else {
+                        return Text("Our servers are freaking out");
+                      }
+                    });
               } else {
                 return Center(
                     child: Column(
