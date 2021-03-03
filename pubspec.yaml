@@ -21,6 +21,8 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  dio: 3.0.10
+  flutter_spinkit: "^4.1.2"
   flutter:
     sdk: flutter
   english_words: ^3.1.5
