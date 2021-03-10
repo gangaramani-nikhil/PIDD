@@ -70,30 +70,7 @@ class _MyAppState extends State<MyApp> {
         body: FutureBuilder<bool>(
             future: _internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              print(snapshot);
-              if (snapshot.data == null) {
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No Connection",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.red),
-                    ),
-                    FlatButton(
-                        onPressed: initState,
-                        color: Colors.grey[300],
-                        child: Text("Try Again",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.black)))
-                  ],
-                ));
-              } else if (snapshot.data == true) {
+              if (snapshot.data == true) {
                 return SingleChildScrollView(
                   child: Column(children: [
                     History("Apple"),
