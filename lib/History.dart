@@ -5,7 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class History extends StatefulWidget {
+  final String plant;
   @override
+  History(this.plant);
   _MyHistory createState() => _MyHistory();
 }
 
@@ -13,7 +15,8 @@ class _MyHistory extends State<History> {
   Future<Map> data;
   Future<Map> fetchData() async {
     var response = await Dio().get(
-        "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=grapes");
+        "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=" +
+            widget.plant);
     return response.data;
   }
 

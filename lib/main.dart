@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import './History.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -27,23 +26,27 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<bool> internetConnection;
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+  Future<bool> _internetConnection = Future.value(false);
   Future<bool> isConnected() async {
     try {
       final result = await InternetAddress.lookup('google.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
+        return Future.value(true);
       }
     } on SocketException catch (_) {
-      return false;
+      return Future.value(false);
     }
+    return Future.value(false);
   }
 
-  void initState() {
+  void check() {
     setState(() {
-      internetConnection = isConnected();
+      _internetConnection = isConnected();
     });
+  }
+
+  @override
+  void initState() {
     super.initState();
   }
 
@@ -65,29 +68,10 @@ class _MyAppState extends State<MyApp> {
           centerTitle: true,
         ),
         body: FutureBuilder<bool>(
-            future: internetConnection,
+            future: _internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.data) {
-                return FutureBuilder(
-                    future: _initialization,
-                    builder: (BuildContext context,
-                        AsyncSnapshot<FirebaseApp> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        return SingleChildScrollView(
-                          child: Column(children: [
-                            History(),
-                            History(),
-                            History(),
-                            History(),
-                            History(),
-                            History(),
-                          ]),
-                        );
-                      } else {
-                        return Text("Our servers are freaking out");
-                      }
-                    });
-              } else {
+              print(snapshot);
+              if (snapshot.data == null) {
                 return Center(
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -101,6 +85,39 @@ class _MyAppState extends State<MyApp> {
                     ),
                     FlatButton(
                         onPressed: initState,
+                        color: Colors.grey[300],
+                        child: Text("Try Again",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.black)))
+                  ],
+                ));
+              } else if (snapshot.data == true) {
+                return SingleChildScrollView(
+                  child: Column(children: [
+                    History("Apple"),
+                    History("Mango"),
+                    History("Neem"),
+                    History("basil"),
+                    History("watermelon"),
+                    History("banana"),
+                  ]),
+                );
+              } else {
+                return Center(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "No Connection",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.red),
+                    ),
+                    FlatButton(
+                        onPressed: check,
                         color: Colors.grey[300],
                         child: Text("Try Again",
                             style: TextStyle(
