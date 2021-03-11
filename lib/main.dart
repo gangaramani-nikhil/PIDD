@@ -26,7 +26,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<bool> _internetConnection = Future.value(false);
+  Future<bool> _internetConnection;
   Future<bool> isConnected() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -52,6 +52,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    check();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -70,6 +71,7 @@ class _MyAppState extends State<MyApp> {
         body: FutureBuilder<bool>(
             future: _internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              print(snapshot);
               if (snapshot.data == true) {
                 return SingleChildScrollView(
                   child: Column(children: [
