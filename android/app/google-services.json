@@ -1,41 +1,42 @@
 {
   "project_info": {
-    "project_number": "1018126920431",
-    "project_id": "our-forest-280405",
-    "storage_bucket": "our-forest-280405.appspot.com"
+    "project_number": "176480009752",
+    "project_id": "pidd-39e7d",
+    "storage_bucket": "pidd-39e7d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1018126920431:android:db5afdb67814fa1e4f091a",
+        "mobilesdk_app_id": "1:176480009752:android:468d6b2618fbc00a888d6d",
         "android_client_info": {
           "package_name": "com.PIDD"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1018126920431-31n9lvsqoh0tpke3ocpr44c0tcdc55k8.apps.googleusercontent.com",
+          "client_id": "176480009752-8jig0rpmervlvnbksfdbbnfor841renh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.PIDD",
+            "certificate_hash": "8d78eec71d442964f7595d3832dd43164a70d1af"
+          }
+        },
+        {
+          "client_id": "176480009752-ajjj4jtamiai6l07i2pmsr9b820r91bd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDkg2RoLTgEATxD8eLEcNBQf_1YcbSjJ4I"
+          "current_key": "AIzaSyAE9m5CB7qcWyWXsjuF6FnJOBYh5WTg7TA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1018126920431-31n9lvsqoh0tpke3ocpr44c0tcdc55k8.apps.googleusercontent.com",
+              "client_id": "176480009752-ajjj4jtamiai6l07i2pmsr9b820r91bd.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "1018126920431-q5qjau3ed7ci73uota60g1iu30ehvgf3.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.PIDD"
-              }
             }
           ]
         }

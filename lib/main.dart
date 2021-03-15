@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'package:first_app/Connection/Connection.dart';
+import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
+//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
-import './History.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -71,40 +74,20 @@ class _MyAppState extends State<MyApp> {
         body: FutureBuilder<bool>(
             future: _internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              print(snapshot);
               if (snapshot.data == true) {
                 return SingleChildScrollView(
-                  child: Column(children: [
-                    History("Apple"),
-                    History("Mango"),
-                    History("Neem"),
-                    History("basil"),
-                    History("watermelon"),
-                    History("banana"),
-                  ]),
+                  child: Wrapper(),
+                );
+              } else if (snapshot.data == null) {
+                return Center(
+                  child: SpinKitRing(
+                    duration: Duration(milliseconds: 500),
+                    color: Colors.green[400],
+                    size: 100.0,
+                  ),
                 );
               } else {
-                return Center(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No Connection",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.red),
-                    ),
-                    FlatButton(
-                        onPressed: check,
-                        color: Colors.grey[300],
-                        child: Text("Try Again",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Colors.black)))
-                  ],
-                ));
+                return Connection(check);
               }
             }),
       ),
