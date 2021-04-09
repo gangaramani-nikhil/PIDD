@@ -1,7 +1,11 @@
-//import 'package:first_app/Authenticate/authenticate.dart';
+// import 'package:first_app/Authenticate/authenticate.dart';
+import 'package:first_app/Authenticate/authenticate_future.dart';
 // import 'package:first_app/Authenticate/authenticate_future.dart';
 import 'package:first_app/History.dart';
 import 'package:flutter/material.dart';
+// import 'dart:io';
+// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Wrapper extends StatefulWidget {
   @override
@@ -9,16 +13,12 @@ class Wrapper extends StatefulWidget {
 }
 
 class _WrapperState extends State<Wrapper> {
-  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
-      children: [
-        History("alo vera"),
-        History("basil"),
-        History("apple"),
-        History("mango")
-      ],
-    ));
+    if (FirebaseAuth.instance.currentUser != null) {
+      return History("Mango");
+      
+    } else {
+      return AuthenticateFuture();
+    }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Connection/Connection.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,9 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
@@ -57,6 +60,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     check();
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           title: Image.asset(

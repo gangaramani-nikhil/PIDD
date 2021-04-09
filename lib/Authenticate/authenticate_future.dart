@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/main.dart';
+import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+// import '../History.dart';
 
 class AuthenticateFuture extends StatefulWidget {
   @override
@@ -9,28 +13,83 @@ class AuthenticateFuture extends StatefulWidget {
 class _AuthenticateFutureState extends State<AuthenticateFuture> {
   var buttonEnable = false;
   final mobileNumberController = TextEditingController();
+  final pincontroller = TextEditingController();
   void dispose() {
     mobileNumberController.dispose();
     super.dispose();
   }
 
-  // ignore: missing_return
-  Future<bool> loginUser() async {
+  Future registerUser(String mobile, BuildContext context) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.verifyPhoneNumber(
+        phoneNumber: mobile,
         timeout: Duration(seconds: 120),
-        phoneNumber: mobileNumberController.text,
-        verificationCompleted: (AuthCredential cred) async {
-          // ignore: unused_local_variable
-          UserCredential result = await _auth.signInWithCredential(cred);
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          Navigator.of(context).pop();
+          final UserCredential user =
+              await _auth.signInWithCredential(credential);
+          if (user != null) {
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //         builder: (context) =>
+            //             SingleChildScrollView(child: MyApp())));
+            main();
+          } else {
+            print("Error");
+          }
         },
-        verificationFailed: null,
-        codeSent: null,
-        codeAutoRetrievalTimeout: null);
+        codeSent: (String verificationId, [int forceResendingToken]) {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("Enter Code"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [TextField(controller: pincontroller)],
+                  ),
+                  actions: [
+                    FlatButton(
+                      onPressed: () async {
+                        final code = pincontroller.text.trim();
+                        AuthCredential credential =
+                            PhoneAuthProvider.credential(
+                                verificationId: verificationId, smsCode: code);
+                        UserCredential user =
+                            await _auth.signInWithCredential(credential);
+                        if (user != null) {
+                          Navigator.of(context).pop();
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             SingleChildScrollView()));
+                          main();
+                        } else {
+                          print("Error");
+                        }
+                      },
+                      child: Text("Verify"),
+                      color: Colors.white,
+                      textColor: Colors.black,
+                    )
+                  ],
+                );
+              });
+        },
+        verificationFailed: (FirebaseAuthException exception) {
+          print(exception);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {});
   }
 
+  // ignore: missing_return
+  Future<bool> loginUser() async {}
+
   void checkLength(data) {
-    if (data.length == 10) {
+    if (data.length == 13) {
       setState(() {
         buttonEnable = true;
       });
@@ -67,8 +126,8 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
                           child: TextField(
                             onChanged: checkLength,
                             controller: mobileNumberController,
-                            maxLength: 10,
-                            maxLengthEnforced: true,
+                            maxLength: 13,
+                            maxLengthEnforcement: MaxLengthEnforcement.enforced,
                             style: TextStyle(color: Colors.white, fontSize: 15),
                             cursorColor: Colors.white,
                             decoration: InputDecoration(
@@ -85,7 +144,12 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
                           ),
                           height: 40,
                           disabledColor: Colors.grey,
-                          onPressed: buttonEnable ? loginUser : null,
+                          onPressed: buttonEnable
+                              ? () => {
+                                    registerUser(
+                                        mobileNumberController.text, context)
+                                  }
+                              : null,
                           color: Colors.white,
                           child: Text(
                             "Login/Register",
