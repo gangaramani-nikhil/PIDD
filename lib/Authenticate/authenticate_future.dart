@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
-import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // import '../History.dart';
 
 class AuthenticateFuture extends StatefulWidget {
+  final String code;
+  @override
+  AuthenticateFuture(this.code);
   @override
   _AuthenticateFutureState createState() => _AuthenticateFutureState();
 }
@@ -14,6 +17,7 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
   var buttonEnable = false;
   final mobileNumberController = TextEditingController();
   final pincontroller = TextEditingController();
+
   void dispose() {
     mobileNumberController.dispose();
     super.dispose();
@@ -21,6 +25,7 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
 
   Future registerUser(String mobile, BuildContext context) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
+    mobile = widget.code + mobile;
     _auth.verifyPhoneNumber(
         phoneNumber: mobile,
         timeout: Duration(seconds: 120),
@@ -89,7 +94,7 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
   Future<bool> loginUser() async {}
 
   void checkLength(data) {
-    if (data.length == 13) {
+    if (data.length == 10) {
       setState(() {
         buttonEnable = true;
       });
@@ -126,7 +131,7 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
                           child: TextField(
                             onChanged: checkLength,
                             controller: mobileNumberController,
-                            maxLength: 13,
+                            maxLength: 10,
                             maxLengthEnforcement: MaxLengthEnforcement.enforced,
                             style: TextStyle(color: Colors.white, fontSize: 15),
                             cursorColor: Colors.white,
