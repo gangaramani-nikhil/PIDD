@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1018126920431-q5qjau3ed7ci73uota60g1iu30ehvgf3.apps.googleusercontent.com</string>
+	<string>176480009752-btenvsa0irl4up0t8gk5tng74b1c2sfj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1018126920431-q5qjau3ed7ci73uota60g1iu30ehvgf3</string>
+	<string>com.googleusercontent.apps.176480009752-btenvsa0irl4up0t8gk5tng74b1c2sfj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAsYnmHihFwbVQPN1SBnUvetBhEdfXwZvk</string>
+	<string>AIzaSyAu2NLbkSNOMhlbgsqI43WatZc8IgZvAO4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1018126920431</string>
+	<string>176480009752</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.PIDD</string>
 	<key>PROJECT_ID</key>
-	<string>our-forest-280405</string>
+	<string>pidd-39e7d</string>
 	<key>STORAGE_BUCKET</key>
-	<string>our-forest-280405.appspot.com</string>
+	<string>pidd-39e7d.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1018126920431:ios:28ab41c580e2b5c24f091a</string>
+	<string>1:176480009752:ios:e0c04afb21733d33888d6d</string>
 </dict>
 </plist>
