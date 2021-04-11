@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Connection/Connection.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
-//import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -80,9 +78,7 @@ class _MyAppState extends State<MyApp> {
             future: _internetConnection,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.data == true) {
-                return SingleChildScrollView(
-                  child: Wrapper(),
-                );
+                return Wrapper();
               } else if (snapshot.data == null) {
                 return Center(
                   child: SpinKitRing(
