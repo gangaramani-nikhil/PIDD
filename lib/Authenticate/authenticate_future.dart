@@ -72,21 +72,6 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
                           //     MaterialPageRoute(
                           //         builder: (context) =>
                           //             SingleChildScrollView()));
-                          final dbVal = await FirebaseFirestore.instance
-                              .collection('data')
-                              .where('mobile_number',
-                                  isEqualTo: FirebaseAuth
-                                      .instance.currentUser.phoneNumber)
-                              .get();
-                          print(dbVal.size);
-                          if (dbVal.size == 0) {
-                            FirebaseFirestore.instance.collection('data').add({
-                              'mobile_number':
-                                  FirebaseAuth.instance.currentUser.phoneNumber,
-                              'data': ["Mango", "Tulsi"]
-                            });
-                          }
-
                           main();
                         } else {
                           print("Error");

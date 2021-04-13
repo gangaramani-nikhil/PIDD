@@ -1,5 +1,6 @@
 import 'package:first_app/Authenticate/authenticate_future.dart';
 import 'package:first_app/History.dart';
+import 'package:first_app/main.dart';
 // import 'package:first_app/History.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,12 @@ class _WrapperState extends State<Wrapper> {
         .where('mobile_number',
             isEqualTo: FirebaseAuth.instance.currentUser.phoneNumber)
         .get();
+    if (value.size == 0) {
+      await data.add({
+        'mobile_number': FirebaseAuth.instance.currentUser.phoneNumber,
+        'data': ["Mango", "Tulsi"]
+      }).then((value) => main());
+    }
     return value.docs.first.data()["data"];
   }
 
