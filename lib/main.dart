@@ -1,5 +1,8 @@
+// import 'dart:html';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:first_app/homescreen.dart';
 import 'package:first_app/Connection/Connection.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +35,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<bool> _internetConnection;
+  bool _floatbuttonenable;
+
+  isfloatbuttonenable() {
+    if (FirebaseAuth.instance.currentUser == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<bool> isConnected() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -46,6 +59,7 @@ class _MyAppState extends State<MyApp> {
 
   void check() {
     setState(() {
+      _floatbuttonenable = isfloatbuttonenable();
       _internetConnection = isConnected();
     });
   }
@@ -59,39 +73,51 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     check();
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Image.asset(
-            'assets/images/PIDD-logos_transparent.png',
-            height: 100,
-            width: 100,
+        debugShowCheckedModeBanner: false,
+        home: Builder(
+          builder: (context) => Scaffold(
+            floatingActionButton: Visibility(
+                visible: _floatbuttonenable,
+                child: FloatingActionButton(
+                    backgroundColor: Colors.green[900],
+                    child: Icon(Icons.camera_alt),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return HomeScreen();
+                      }));
+                    })),
+            appBar: AppBar(
+              title: Image.asset(
+                'assets/images/PIDD-logos_transparent.png',
+                height: 100,
+                width: 100,
+              ),
+              shadowColor: Colors.green[300],
+              toolbarHeight: 100,
+              elevation: 10,
+              backgroundColor: Colors.green[400],
+              bottomOpacity: 1.0,
+              centerTitle: true,
+            ),
+            body: FutureBuilder<bool>(
+                future: _internetConnection,
+                builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                  if (snapshot.data == true) {
+                    return Wrapper();
+                  } else if (snapshot.data == null) {
+                    return Center(
+                      child: SpinKitRing(
+                        duration: Duration(milliseconds: 500),
+                        color: Colors.green[400],
+                        size: 100.0,
+                      ),
+                    );
+                  } else {
+                    return Connection(check);
+                  }
+                }),
           ),
-          shadowColor: Colors.green[300],
-          toolbarHeight: 100,
-          elevation: 10,
-          backgroundColor: Colors.green[400],
-          bottomOpacity: 1.0,
-          centerTitle: true,
-        ),
-        body: FutureBuilder<bool>(
-            future: _internetConnection,
-            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if (snapshot.data == true) {
-                return Wrapper();
-              } else if (snapshot.data == null) {
-                return Center(
-                  child: SpinKitRing(
-                    duration: Duration(milliseconds: 500),
-                    color: Colors.green[400],
-                    size: 100.0,
-                  ),
-                );
-              } else {
-                return Connection(check);
-              }
-            }),
-      ),
-    );
+        ));
   }
 }

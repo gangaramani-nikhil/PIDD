@@ -22,6 +22,8 @@ environment:
 
 dependencies:
   dio: ^4.0.0
+  tflite: ^1.1.2
+  image_picker: ^0.7.4
   google_sign_in: ^5.0.1
   firebase_core: ^1.0.2
   firebase_analytics: "^7.0.1"
@@ -52,6 +54,8 @@ flutter:
   #   To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/newcnn.tflite
+    - assets/labels.txt
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
