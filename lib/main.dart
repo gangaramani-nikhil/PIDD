@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Connection/Connection.dart';
+import 'package:first_app/homescreen.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   Future<bool> _internetConnection;
   bool floatbuttonenable = false;
   List _color = [null, null, Colors.white];
-  int _index = 2;
+  int index = 2;
 
   isfloatbuttonenable() {
     if (FirebaseAuth.instance.currentUser != null) {
@@ -98,7 +99,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _index = 0;
+                              index = 0;
                               _color[0] = Colors.white;
                               _color[1] = null;
                               _color[2] = null;
@@ -113,7 +114,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _index = 1;
+                              index = 1;
                               _color[0] = null;
                               _color[1] = Colors.white;
                               _color[2] = null;
@@ -128,7 +129,7 @@ class _MyAppState extends State<MyApp> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _index = 2;
+                              index = 2;
                               _color[0] = null;
                               _color[1] = null;
                               _color[2] = Colors.white;
@@ -168,7 +169,8 @@ class _MyAppState extends State<MyApp> {
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   if (snapshot.data == true) {
                     // return Wrapper();
-                    return Wrapper(_index);
+                    // return Wrapper(_index);
+                    return Wrapper(index);
                   } else if (snapshot.data == null) {
                     return Center(
                       child: SpinKitRing(

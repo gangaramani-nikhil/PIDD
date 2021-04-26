@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
 import 'package:first_app/wrapper.dart';
@@ -138,29 +139,84 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value) => main())
         .catchError((w) => print(w));
     setState(() {
-      _recognitions = recognitions;
+      _recognitions = recognitions[0]["label"];
+      print(_recognitions.runtimeType);
     });
   }
 
-  Widget printValue(rcg) {
-    if (rcg == null) {
-      return Text('',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700));
-    } else if (rcg.isEmpty) {
-      return Center(
-        child: Text("Could not recognize",
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
-      );
-    }
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Center(
-        child: Text(
-          "Prediction: " + _recognitions[0]['label'].toString().toUpperCase(),
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
+  Future<Map> fetchData(plantName) async {
+    var response = await Dio().get(
+        "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=" +
+            plantName);
+    return response.data;
+  }
+
+  Widget printValue(rcg, context) {
+    // if (rcg == null) {
+    //   return Text('',
+    //       style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700));
+    // } else if (rcg.isEmpty) {
+    //   return Center(
+    //     child: Text("Could not recognize",
+    //         style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700)),
+    //   );
+    // }
+    // return Padding(
+    //   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    //   child: Center(
+    //     child: Text(
+    //       "Prediction: " + _recognitions[0]['label'].toString().toUpperCase(),
+    //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    //     ),
+    //   ),
+    // );
+
+    var plantName = rcg.split("__")[0];
+    plantName = plantName.replaceAll("__", " ");
+    plantName = plantName.replaceAll("_", " ");
+    var disease = rcg.split("__")[1];
+    disease = disease.replaceAll("__", " ");
+    disease = disease.replaceAll("_", " ");
+    return FutureBuilder(
+        future: fetchData(plantName),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.data != null) {
+            var val = snapshot.data["data"][0];
+            print(val);
+            return AlertDialog(
+              title: const Text('Prediction'),
+              content: new Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
+                      child: Image.file(_image,
+                          fit: BoxFit.fill, width: 200, height: 200)),
+                  Divider(thickness: 1, color: Colors.black),
+                  Text("Plant Predicted : " + plantName),
+                  Text("Disease Detected : " + disease),
+                  Text("Scientific Name : " + val["scientific_name"]),
+                  Text("Common Name : " + val["common_name"]),
+                  Text("Family : " + val["family"]),
+                  Text("Genus : " + val["genus"]),
+                  Text("Year : " + val["year"].toString()),
+                ],
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => MyApp()));
+                  },
+                  textColor: Theme.of(context).primaryColor,
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          } else {
+            return Center(child: Text("We are Processing your result"));
+          }
+        });
   }
 
   // gets called every time the widget need to re-render or build
@@ -193,68 +249,58 @@ class _HomeScreenState extends State<HomeScreen> {
 //    List<Widget> stackChildren = [];
 
     return Scaffold(
-        body: ListView(
-      children: <Widget>[
-        Padding(
-            padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-            child: printValue(_recognitions)),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-          child: _image == null
-              ? Center(
-                  child: Text("Select image from camera or gallery"),
-                )
-              : Center(
-                  child: Image.file(_image,
-                      fit: BoxFit.fill, width: finalW, height: finalH)),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: Container(
-                height: 50,
-                width: 150,
-                color: Colors.redAccent,
-                child: FlatButton.icon(
-                  onPressed: selectFromCamera,
-                  icon: Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 30,
+        body: _recognitions == null
+            ? ListView(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Container(
+                          height: 50,
+                          width: 150,
+                          color: Colors.redAccent,
+                          child: FlatButton.icon(
+                            onPressed: selectFromCamera,
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            color: Colors.deepPurple,
+                            label: Text(
+                              "Camera",
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                          ),
+                          margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        width: 150,
+                        color: Colors.tealAccent,
+                        child: FlatButton.icon(
+                          onPressed: selectFromGallery,
+                          icon: Icon(
+                            Icons.file_upload,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                          color: Colors.blueAccent,
+                          label: Text(
+                            "Gallery",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ),
+                        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                      ),
+                    ],
                   ),
-                  color: Colors.deepPurple,
-                  label: Text(
-                    "Camera",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-                margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-              ),
-            ),
-            Container(
-              height: 50,
-              width: 150,
-              color: Colors.tealAccent,
-              child: FlatButton.icon(
-                onPressed: selectFromGallery,
-                icon: Icon(
-                  Icons.file_upload,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                color: Colors.blueAccent,
-                label: Text(
-                  "Gallery",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-              ),
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-            ),
-          ],
-        ),
-      ],
-    ));
+                ],
+              )
+            : printValue(_recognitions, context));
   }
 }
