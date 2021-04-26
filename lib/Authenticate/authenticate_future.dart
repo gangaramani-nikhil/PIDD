@@ -1,4 +1,5 @@
 // import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
 import 'package:flutter/material.dart';
@@ -35,11 +36,19 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
           final UserCredential user =
               await _auth.signInWithCredential(credential);
           if (user != null) {
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             SingleChildScrollView(child: MyApp())));
+            CollectionReference data =
+                FirebaseFirestore.instance.collection('data');
+            final value = await data
+                .where('mobile_number',
+                    isEqualTo: FirebaseAuth.instance.currentUser.phoneNumber)
+                .get();
+            if (value.size == 0) {
+              await data.add({
+                'mobile_number': FirebaseAuth.instance.currentUser.phoneNumber,
+                'data': [],
+                'disease': []
+              }).then((value) => main());
+            }
             main();
           } else {
             print("Error");
@@ -67,11 +76,21 @@ class _AuthenticateFutureState extends State<AuthenticateFuture> {
                             await _auth.signInWithCredential(credential);
                         if (user != null) {
                           Navigator.of(context).pop();
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             SingleChildScrollView()));
+                          CollectionReference data =
+                              FirebaseFirestore.instance.collection('data');
+                          final value = await data
+                              .where('mobile_number',
+                                  isEqualTo: FirebaseAuth
+                                      .instance.currentUser.phoneNumber)
+                              .get();
+                          if (value.size == 0) {
+                            await data.add({
+                              'mobile_number':
+                                  FirebaseAuth.instance.currentUser.phoneNumber,
+                              'data': [],
+                              'disease': []
+                            }).then((value) => main());
+                          }
                           main();
                         } else {
                           print("Error");

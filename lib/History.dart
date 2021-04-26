@@ -6,8 +6,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class History extends StatefulWidget {
   final String plant;
+  final String disease;
+  final bool latest;
   @override
-  History(this.plant);
+  History(this.plant, this.disease, this.latest);
   _MyHistory createState() => _MyHistory();
 }
 
@@ -48,12 +50,27 @@ class _MyHistory extends State<History> {
               child: Container(
                   margin: EdgeInsets.all(0),
                   width: double.infinity,
-                  height: 400,
+                  height: 350,
                   child: Column(children: <Widget>[
+                    widget.latest
+                        ? Container(
+                            padding: EdgeInsets.only(top: 10),
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Latest Prediction",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  shadows: [
+                                    Shadow(blurRadius: 1, color: Colors.black)
+                                  ],
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.lightBlue),
+                            ))
+                        : Container(),
                     Container(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: widget.latest ? 5 : 20),
                       width: 300,
-                      height: 300,
+                      height: 200,
                       child: FittedBox(
                         child: FadeInImage(
                             fadeInDuration: Duration(milliseconds: 100),
@@ -140,7 +157,7 @@ class _MyHistory extends State<History> {
                               ),
                               Text(" : "),
                               Text(
-                                "None",
+                                widget.disease,
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: _fontsize,

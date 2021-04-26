@@ -2,7 +2,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:first_app/homescreen.dart';
 import 'package:first_app/Connection/Connection.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
@@ -35,13 +34,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Future<bool> _internetConnection;
-  bool _floatbuttonenable;
+  bool floatbuttonenable = false;
+  List _color = [null, null, Colors.white];
+  int _index = 2;
 
   isfloatbuttonenable() {
-    if (FirebaseAuth.instance.currentUser == null) {
-      return false;
-    } else {
+    if (FirebaseAuth.instance.currentUser != null) {
       return true;
+    } else {
+      return false;
     }
   }
 
@@ -59,7 +60,7 @@ class _MyAppState extends State<MyApp> {
 
   void check() {
     setState(() {
-      _floatbuttonenable = isfloatbuttonenable();
+      floatbuttonenable = isfloatbuttonenable();
       _internetConnection = isConnected();
     });
   }
@@ -72,21 +73,83 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     check();
+    isfloatbuttonenable();
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Builder(
           builder: (context) => Scaffold(
-            floatingActionButton: Visibility(
-                visible: _floatbuttonenable,
-                child: FloatingActionButton(
-                    backgroundColor: Colors.green[900],
-                    child: Icon(Icons.camera_alt),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return HomeScreen();
-                      }));
-                    })),
+            bottomNavigationBar: Visibility(
+                visible: floatbuttonenable,
+                // visible: true,
+                child: BottomAppBar(
+                  shape: CircularNotchedRectangle(),
+                  child: Container(
+                    color: Colors.green[400],
+                    height: 75,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: Icon(
+                            Icons.account_box_rounded,
+                            color: _color[0],
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _index = 0;
+                              _color[0] = Colors.white;
+                              _color[1] = null;
+                              _color[2] = null;
+                            });
+                          },
+                        ),
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: Icon(
+                            Icons.camera_alt_rounded,
+                            color: _color[1],
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _index = 1;
+                              _color[0] = null;
+                              _color[1] = Colors.white;
+                              _color[2] = null;
+                            });
+                          },
+                        ),
+                        IconButton(
+                          iconSize: 30.0,
+                          icon: Icon(
+                            Icons.history_outlined,
+                            color: _color[2],
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _index = 2;
+                              _color[0] = null;
+                              _color[1] = null;
+                              _color[2] = Colors.white;
+                            });
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                )),
+            // floatingActionButton: Visibility(
+            //     visible: _floatbuttonenable,
+            //     child: FloatingActionButton(
+            //         backgroundColor: Colors.green[900],
+            //         child: Icon(Icons.camera_alt),
+            //         onPressed: () {
+            //           Navigator.push(context,
+            //               MaterialPageRoute(builder: (context) {
+            //             return HomeScreen();
+            //           }));
+            //         })),
             appBar: AppBar(
               title: Image.asset(
                 'assets/images/PIDD-logos_transparent.png',
@@ -104,7 +167,8 @@ class _MyAppState extends State<MyApp> {
                 future: _internetConnection,
                 builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
                   if (snapshot.data == true) {
-                    return Wrapper();
+                    // return Wrapper();
+                    return Wrapper(_index);
                   } else if (snapshot.data == null) {
                     return Center(
                       child: SpinKitRing(

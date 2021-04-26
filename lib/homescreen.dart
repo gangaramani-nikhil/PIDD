@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:first_app/main.dart';
+import 'package:first_app/wrapper.dart';
 // import 'package:firebase_core/firebase_core.dart';
-// import 'package:first_app/Connection/Connection.dart';
-// import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-// import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/services.dart';
@@ -102,6 +103,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
     print(recognitions);
 
+    CollectionReference data = FirebaseFirestore.instance.collection('data');
+    final value = await data
+        .where('mobile_number',
+            isEqualTo: FirebaseAuth.instance.currentUser.phoneNumber)
+        .get();
+    var plantsList = value.docs.first.data()["data"];
+    var diseaseList = value.docs.first.data()["disease"];
+    var plantName = recognitions[0]["label"].split("__")[0];
+    plantName = plantName.replaceAll("__", " ");
+    plantName = plantName.replaceAll("_", " ");
+    var disease = recognitions[0]["label"].split("__")[1];
+    disease = disease.replaceAll("__", " ");
+    disease = disease.replaceAll("_", " ");
+    plantsList.insert(0, plantName);
+    diseaseList.insert(0, disease);
+    await data
+        .where('mobile_number',
+            isEqualTo: FirebaseAuth.instance.currentUser.phoneNumber)
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              FirebaseFirestore.instance
+                  .collection("data")
+                  .doc(element.id)
+                  .delete()
+                  .then((value) => {});
+            }));
+    await data
+        .add({
+          'mobile_number': FirebaseAuth.instance.currentUser.phoneNumber,
+          'data': plantsList,
+          'disease': diseaseList
+        })
+        .then((value) => main())
+        .catchError((w) => print(w));
     setState(() {
       _recognitions = recognitions;
     });
@@ -158,75 +193,68 @@ class _HomeScreenState extends State<HomeScreen> {
 //    List<Widget> stackChildren = [];
 
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          backgroundColor: Colors.green[400],
-          centerTitle: true,
-        ),
         body: ListView(
+      children: <Widget>[
+        Padding(
+            padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
+            child: printValue(_recognitions)),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: _image == null
+              ? Center(
+                  child: Text("Select image from camera or gallery"),
+                )
+              : Center(
+                  child: Image.file(_image,
+                      fit: BoxFit.fill, width: finalW, height: finalH)),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.fromLTRB(0, 30, 0, 30),
-                child: printValue(_recognitions)),
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-              child: _image == null
-                  ? Center(
-                      child: Text("Select image from camera or gallery"),
-                    )
-                  : Center(
-                      child: Image.file(_image,
-                          fit: BoxFit.fill, width: finalW, height: finalH)),
+              padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Container(
+                height: 50,
+                width: 150,
+                color: Colors.redAccent,
+                child: FlatButton.icon(
+                  onPressed: selectFromCamera,
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  color: Colors.deepPurple,
+                  label: Text(
+                    "Camera",
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+                margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: Container(
-                    height: 50,
-                    width: 150,
-                    color: Colors.redAccent,
-                    child: FlatButton.icon(
-                      onPressed: selectFromCamera,
-                      icon: Icon(
-                        Icons.camera_alt,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                      color: Colors.deepPurple,
-                      label: Text(
-                        "Camera",
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                    ),
-                    margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                  ),
+            Container(
+              height: 50,
+              width: 150,
+              color: Colors.tealAccent,
+              child: FlatButton.icon(
+                onPressed: selectFromGallery,
+                icon: Icon(
+                  Icons.file_upload,
+                  color: Colors.white,
+                  size: 30,
                 ),
-                Container(
-                  height: 50,
-                  width: 150,
-                  color: Colors.tealAccent,
-                  child: FlatButton.icon(
-                    onPressed: selectFromGallery,
-                    icon: Icon(
-                      Icons.file_upload,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                    color: Colors.blueAccent,
-                    label: Text(
-                      "Gallery",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                    ),
-                  ),
-                  margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+                color: Colors.blueAccent,
+                label: Text(
+                  "Gallery",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-              ],
+              ),
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
             ),
           ],
-        ));
+        ),
+      ],
+    ));
   }
 }
