@@ -43,7 +43,8 @@ class _AccountState extends State<Account> {
                 disabledColor: Colors.grey,
                 onPressed: () async {
                   FirebaseAuth.instance.signOut();
-                  main();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => MyApp()));
                 },
                 color: Colors.green[100],
                 child: Text(
