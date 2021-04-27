@@ -3,14 +3,13 @@ import 'package:first_app/History.dart';
 import 'package:first_app/account.dart';
 import 'package:first_app/homescreen.dart';
 import 'package:first_app/main.dart';
-// import 'package:first_app/History.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Wrapper extends StatefulWidget {
-  int _widgetGet;
+  final int _widgetGet;
   Wrapper(this._widgetGet);
   @override
   _WrapperState createState() => _WrapperState();
@@ -44,6 +43,9 @@ class _WrapperState extends State<Wrapper> {
               widgetList.add(History(snapshot.data["data"][count],
                   snapshot.data["disease"][count], count == 0 ? true : false));
               count++;
+            }
+            if (widgetList.length != 0) {
+              widgetList.add(Padding(padding: EdgeInsets.all(50)));
             }
             return widgetList.length != 0
                 ? SingleChildScrollView(

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
-import 'package:first_app/wrapper.dart';
+// import 'package:first_app/wrapper.dart';
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -250,57 +250,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
         body: _recognitions == null
-            ? ListView(
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                        child: Container(
-                          height: 50,
-                          width: 150,
-                          color: Colors.redAccent,
-                          child: FlatButton.icon(
-                            onPressed: selectFromCamera,
-                            icon: Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            color: Colors.deepPurple,
-                            label: Text(
-                              "Camera",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
-                            ),
-                          ),
-                          margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+            ? Container(
+                height: double.infinity,
+                width: double.infinity,
+                child: Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.only(bottom: 30),
+                            child: FlatButton.icon(
+                                onPressed: selectFromCamera,
+                                label: Text(
+                                  "Take Photo",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                icon: Icon(Icons.camera_rounded,
+                                    color: Colors.black, size: 40))),
+                        Container(
+                          child: Text("OR",
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.center),
+                          alignment: Alignment.center,
                         ),
-                      ),
-                      Container(
-                        height: 50,
-                        width: 150,
-                        color: Colors.tealAccent,
-                        child: FlatButton.icon(
-                          onPressed: selectFromGallery,
-                          icon: Icon(
-                            Icons.file_upload,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                          color: Colors.blueAccent,
-                          label: Text(
-                            "Gallery",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
-                        margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                      ),
-                    ],
-                  ),
-                ],
-              )
+                        Container(
+                            padding: EdgeInsets.only(top: 30),
+                            child: FlatButton.icon(
+                                onPressed: selectFromGallery,
+                                label: Text(
+                                  "Upload Photo",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                icon: Icon(Icons.image_outlined,
+                                    color: Colors.black, size: 40)))
+                      ],
+                    )))
             : printValue(_recognitions, context));
   }
 }
+
+// Center(
+//                 child: ListView(
+//                 children: <Widget>[
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.center,
+//                     children: <Widget>[
+//                       Padding(
+//                         padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+//                         child: Container(
+//                           height: 50,
+//                           width: 150,
+//                           color: Colors.redAccent,
+//                           child: FlatButton.icon(
+//                             onPressed: selectFromCamera,
+//                             icon: Icon(
+//                               Icons.camera_alt,
+//                               color: Colors.white,
+//                               size: 30,
+//                             ),
+//                             color: Colors.deepPurple,
+//                             label: Text(
+//                               "Camera",
+//                               style:
+//                                   TextStyle(color: Colors.white, fontSize: 20),
+//                             ),
+//                           ),
+//                           margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+//                         ),
+//                       ),
+//                       Container(
+//                         height: 50,
+//                         width: 150,
+//                         color: Colors.tealAccent,
+//                         child: FlatButton.icon(
+//                           onPressed: selectFromGallery,
+//                           icon: Icon(
+//                             Icons.file_upload,
+//                             color: Colors.white,
+//                             size: 30,
+//                           ),
+//                           color: Colors.blueAccent,
+//                           label: Text(
+//                             "Gallery",
+//                             style: TextStyle(color: Colors.white, fontSize: 20),
+//                           ),
+//                         ),
+//                         margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+//                       ),
+//                     ],
+//                   ),
+//                 ],
+//               ))

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:first_app/Connection/Connection.dart';
-import 'package:first_app/homescreen.dart';
+// import 'package:first_app/homescreen.dart';
 import 'package:first_app/wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -36,7 +36,11 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   Future<bool> _internetConnection;
   bool floatbuttonenable = false;
-  List _color = [null, null, Colors.white];
+  List _color = [
+    Colors.white.withOpacity(.50),
+    Colors.white.withOpacity(.50),
+    Colors.white
+  ];
   int index = 2;
 
   isfloatbuttonenable() {
@@ -79,62 +83,87 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         home: Builder(
           builder: (context) => Scaffold(
+            extendBody: true,
+
             bottomNavigationBar: Visibility(
                 visible: floatbuttonenable,
                 // visible: true,
                 child: BottomAppBar(
-                  shape: CircularNotchedRectangle(),
                   child: Container(
                     color: Colors.green[400],
-                    height: 75,
+                    height: 70,
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        IconButton(
-                          iconSize: 30.0,
-                          icon: Icon(
-                            Icons.account_box_rounded,
-                            color: _color[0],
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              index = 0;
-                              _color[0] = Colors.white;
-                              _color[1] = null;
-                              _color[2] = null;
-                            });
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: Icon(
+                                Icons.account_box_rounded,
+                                color: _color[0],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  index = 0;
+                                  _color[0] = Colors.white;
+                                  _color[1] = Colors.white.withOpacity(.50);
+                                  _color[2] = Colors.white.withOpacity(.50);
+                                });
+                              },
+                            ),
+                            Text(
+                              "Account",
+                              style: TextStyle(color: _color[0]),
+                            )
+                          ],
                         ),
-                        IconButton(
-                          iconSize: 30.0,
-                          icon: Icon(
-                            Icons.camera_alt_rounded,
-                            color: _color[1],
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              index = 1;
-                              _color[0] = null;
-                              _color[1] = Colors.white;
-                              _color[2] = null;
-                            });
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: Icon(
+                                Icons.camera_alt_rounded,
+                                color: _color[1],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  index = 1;
+                                  _color[0] = Colors.white.withOpacity(.50);
+                                  _color[1] = Colors.white;
+                                  _color[2] = Colors.white.withOpacity(.50);
+                                });
+                              },
+                            ),
+                            Text(
+                              "Predict",
+                              style: TextStyle(color: _color[1]),
+                            )
+                          ],
                         ),
-                        IconButton(
-                          iconSize: 30.0,
-                          icon: Icon(
-                            Icons.history_outlined,
-                            color: _color[2],
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              index = 2;
-                              _color[0] = null;
-                              _color[1] = null;
-                              _color[2] = Colors.white;
-                            });
-                          },
+                        Column(
+                          children: [
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: Icon(
+                                Icons.history_outlined,
+                                color: _color[2],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  index = 2;
+                                  _color[0] = Colors.white.withOpacity(.50);
+                                  _color[1] = Colors.white.withOpacity(.50);
+                                  _color[2] = Colors.white;
+                                });
+                              },
+                            ),
+                            Text(
+                              "History",
+                              style: TextStyle(color: _color[2]),
+                            )
+                          ],
                         )
                       ],
                     ),

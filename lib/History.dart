@@ -42,15 +42,17 @@ class _MyHistory extends State<History> {
               }
             }
             return Card(
+              borderOnForeground: true,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20))),
-              color: Colors.green[200],
-              margin: EdgeInsets.all(30),
+              // color: Colors.green[200],
+              color: Colors.white,
+              margin: EdgeInsets.only(bottom: 5, top: 15, left: 30, right: 30),
               shadowColor: Colors.black,
               child: Container(
                   margin: EdgeInsets.all(0),
                   width: double.infinity,
-                  height: 350,
+                  height: widget.latest ? 350 : 300,
                   child: Column(children: <Widget>[
                     widget.latest
                         ? Container(
@@ -63,8 +65,8 @@ class _MyHistory extends State<History> {
                                   shadows: [
                                     Shadow(blurRadius: 1, color: Colors.black)
                                   ],
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.lightBlue),
+                                  fontStyle: FontStyle.values[1],
+                                  color: Colors.green[900]),
                             ))
                         : Container(),
                     Container(
