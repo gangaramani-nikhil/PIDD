@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:first_app/main.dart';
 // import 'package:first_app/wrapper.dart';
@@ -145,10 +145,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Map> fetchData(plantName) async {
-    var response = await Dio().get(
-        "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=" +
-            plantName);
-    return response.data;
+    CollectionReference data = FirebaseFirestore.instance.collection('plant_info');
+    final value = await data
+        .where('common_name',
+        isEqualTo: plantName)
+        .get();
+    return value.docs.first.data();
   }
 
   Widget printValue(rcg, context) {
@@ -181,8 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
         future: fetchData(plantName),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.data != null) {
-            var val = snapshot.data["data"][0];
-            print(val);
             return AlertDialog(
               title: const Text('Prediction'),
               content: new Column(
@@ -195,11 +195,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Divider(thickness: 1, color: Colors.black),
                   Text("Plant Predicted : " + plantName),
                   Text("Disease Detected : " + disease),
-                  Text("Scientific Name : " + val["scientific_name"]),
-                  Text("Common Name : " + val["common_name"]),
-                  Text("Family : " + val["family"]),
-                  Text("Genus : " + val["genus"]),
-                  Text("Year : " + val["year"].toString()),
+                  Text("Scientific Name : " + snapshot.data["scientific_name"]),
+                  Text("Common Name : " + snapshot.data["common_name"]),
+                  Text("Family : " + snapshot.data["family"]),
+                  Text("Genus : " + snapshot.data["genus"]),
+                  Text("Year : " + snapshot.data["discovery"]),
                 ],
               ),
               actions: <Widget>[
@@ -210,11 +210,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   textColor: Theme.of(context).primaryColor,
                   child: const Text('Close'),
-                ),
+                ), 
               ],
             );
           } else {
-            return Center(child: Text("We are Processing your result"));
+            return Center(child: Text("We are processing your result"));
           }
         });
   }

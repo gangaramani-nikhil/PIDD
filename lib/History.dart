@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -40,7 +40,6 @@ class _MyHistory extends State<History> {
         future: data,
         builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData) {
-            print(snapshot.data);
             return Card(
               borderOnForeground: true,
               shape: RoundedRectangleBorder(
@@ -97,7 +96,7 @@ class _MyHistory extends State<History> {
                                   fontSize: _fontsize,
                                 ),
                               ),
-                              Text(" : "),
+                              Text(": "),
                               Text(
                                 snapshot.data["common_name"],
                                 textAlign: TextAlign.start,
@@ -117,7 +116,7 @@ class _MyHistory extends State<History> {
                                   fontSize: _fontsize,
                                 ),
                               ),
-                              Text(" : "),
+                              Text(": "),
                               Text(
                                 snapshot.data["scientific_name"],
                                 textAlign: TextAlign.start,
@@ -137,7 +136,7 @@ class _MyHistory extends State<History> {
                                   fontSize: _fontsize,
                                 ),
                               ),
-                              Text(" : "),
+                              Text(": "),
                               Text(
                                 snapshot.data["discovery"],
                                 textAlign: TextAlign.start,
@@ -157,7 +156,7 @@ class _MyHistory extends State<History> {
                                   fontSize: _fontsize,
                                 ),
                               ),
-                              Text(" : "),
+                              Text(": "),
                               Text(
                                 widget.disease,
                                 textAlign: TextAlign.start,
