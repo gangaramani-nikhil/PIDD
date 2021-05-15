@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -16,10 +17,16 @@ class History extends StatefulWidget {
 class _MyHistory extends State<History> {
   Future<Map> data;
   Future<Map> fetchData() async {
-    var response = await Dio().get(
-        "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=" +
-            widget.plant);
-    return response.data;
+    // var response = await Dio().get(
+    //     "https://trefle.io/api/v1/plants/search?token=MOl2QynCl9PEx3oLKn0tiQ9QRozWsCZHCDAmej3xuTg&q=" +
+    //         widget.plant);
+    // return response.data;
+    CollectionReference data = FirebaseFirestore.instance.collection('plant_info');
+    final value = await data
+        .where('common_name',
+        isEqualTo: widget.plant)
+        .get();
+    return value.docs.first.data();
   }
 
   void initState() {
@@ -33,14 +40,7 @@ class _MyHistory extends State<History> {
         future: data,
         builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
           if (snapshot.hasData) {
-            List imageValues = [];
-            var val = snapshot.data;
-            val = val["data"][0];
-            for (var item in snapshot.data["data"]) {
-              if (item["image_url"] != null) {
-                imageValues.add(item["image_url"]);
-              }
-            }
+            print(snapshot.data);
             return Card(
               borderOnForeground: true,
               shape: RoundedRectangleBorder(
@@ -78,7 +78,7 @@ class _MyHistory extends State<History> {
                             fadeInDuration: Duration(milliseconds: 100),
                             placeholder:
                                 AssetImage('assets/images/loading.gif'),
-                            image: NetworkImage(imageValues[0])),
+                            image: NetworkImage(snapshot.data["image_url"])),
                         fit: BoxFit.fill,
                       ),
                     ),
@@ -99,7 +99,7 @@ class _MyHistory extends State<History> {
                               ),
                               Text(" : "),
                               Text(
-                                val["common_name"],
+                                snapshot.data["common_name"],
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: _fontsize,
@@ -119,7 +119,7 @@ class _MyHistory extends State<History> {
                               ),
                               Text(" : "),
                               Text(
-                                val["scientific_name"],
+                                snapshot.data["scientific_name"],
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: _fontsize,
@@ -139,7 +139,7 @@ class _MyHistory extends State<History> {
                               ),
                               Text(" : "),
                               Text(
-                                val["year"].toString(),
+                                snapshot.data["discovery"],
                                 textAlign: TextAlign.start,
                                 style: TextStyle(
                                   fontSize: _fontsize,
